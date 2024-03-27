@@ -88,6 +88,7 @@ def decisionMenu()
     @player2.playerName = gets.chomp
     puts "Decide which player goes first:"
     $goesFirst = gets.chomp.to_i
+    puts "--------------------------"
     #After setting up player details, return to the main menu
     mainMenu()
 end
@@ -104,22 +105,10 @@ def displayBoard(board)
     end
 end
 
-#Function to reset game board
-def resetGameBoard()
-    #Iterate through each row
-    @gameBoard.each_with_index do |row, rowIndex|
-        #Iterate through each column
-        row.each_with_index do |cell, colIndex|
-            #Set the value of the current cell to 0
-            @gameBoard[rowIndex][colIndex] = 0
-        end
-    end
-end
-
-
 #Function and menu to run game
 def gameMenu() 
-    
+    #Reset gameWon variable
+    $gameWon == 0
     #Win number variable
     winNumber = 0
     #Variable to count the number of turns taken and decide who goes first
@@ -128,12 +117,10 @@ def gameMenu()
     else
         turnCount = 2
     end
-    #Variable to track if game has been won
-    gameWin = 0
     #Array to track column counts
     colCountArr = Array.new(7, 0)
     #Begin game
-    while gameWin == 0
+    while $gameWon == 0
         if turnCount % 2 == 1
             #Asks Player 1 for a row and column
             puts "#{@player1.playerName}, choose a column:"
@@ -175,7 +162,7 @@ def gameMenu()
             winner = checkBoard(@gameBoard, rowPlacement, userCol, "X")
             if winner == 1
                 @player1.winCount += 1
-                gameWin = 1
+                $gameWon = 1
                 winNumber = 1
             end
 
@@ -223,7 +210,7 @@ def gameMenu()
             winner = checkBoard(@gameBoard, rowPlacement, userCol, "O")
             if winner == 2
                 @player2.winCount += 1
-                gameWin = 2
+                $gameWon = 2
                 winNumber = 2
             end
 
@@ -231,10 +218,9 @@ def gameMenu()
             turnCount = turnCount + 1
         end
     end
-    #Reset game board
-    resetGameBoard()
     #Bring up game over menu
     gameOverMenu(winNumber)
+    $gameWon = 0
 end
 
 #Function to check game board for win conditions after every turn
